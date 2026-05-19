@@ -2,6 +2,14 @@
   "name": "@rogerchappel/repolock",
   "version": "0.1.0",
   "description": "Local-first repository policy snapshot and verify CLI.",
+  "homepage": "https://github.com/rogerchappel/repolock#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rogerchappel/repolock.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rogerchappel/repolock/issues"
+  },
   "type": "module",
   "bin": {
     "repolock": "./dist/cli.js"
