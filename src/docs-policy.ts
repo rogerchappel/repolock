@@ -5,7 +5,8 @@ export const defaultRequiredDocs = [
   'README.md',
   'CONTRIBUTING.md',
   'SECURITY.md',
-  'LICENSE'
+  'LICENSE',
+  '.github/pull_request_template.md'
 ];
 
 export async function readRequiredDocs(repoRoot: string, docs = defaultRequiredDocs): Promise<Record<string, boolean>> {
