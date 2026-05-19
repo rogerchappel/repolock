@@ -1,5 +1,13 @@
 # Security Policy
 
+Repolock is local-first. Runtime commands inspect files in the repository path
+you pass to the CLI and write snapshot/report artifacts to the local filesystem.
+It does not send telemetry, call hosted APIs, or upload repository metadata.
+
+Snapshots can still reveal repository structure, script names, branch names, and
+policy-sensitive paths. Treat `repolock.snapshot.json` as internal project
+metadata unless you explicitly want to publish it.
+
 ## Supported Versions
 
 Replace this section with the supported versions for `repolock`.
