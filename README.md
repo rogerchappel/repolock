@@ -1,51 +1,119 @@
-# repolock
+# Repolock
 
-Local-first repository policy snapshot and verify CLI
+Repolock is a local-first repository policy snapshotter for developers and
+agents. It records the safety-critical shape of a repository, then verifies
+later work against that saved contract before a human or agent ships.
 
-## Status
+It focuses on deterministic local facts:
 
-This repository is early-stage. Confirm the current support, release, and
-security posture before using it in production.
+- package manager and lockfile family
+- package scripts
+- git default and current branch
+- required docs
+- pull request template presence
+- .gitignore coverage for generated files and common secret paths
+- protected paths that deserve review when changed
 
 ## Install
 
-Replace this section with the generated repository's installation steps.
-
-```sh
-pnpm install
+```bash
+npm install
+npm run build
 ```
 
-## Use
+Run from source:
 
-Replace this section with the smallest useful example for the generated
-repository.
+```bash
+node dist/cli.js --help
+```
 
-```sh
-pnpm dev
+## Snapshot
+
+```bash
+repolock snapshot .
+```
+
+By default this writes:
+
+- `.repolock/repolock.snapshot.json`
+- `.repolock/repolock.report.md`
+
+Use another output directory when you do not want artifacts in the target repo:
+
+```bash
+repolock snapshot fixtures/basic-repo --output .tmp/basic-policy
 ```
 
 ## Verify
 
-Run the local validation script before opening a pull request:
+```bash
+repolock verify . --snapshot .repolock/repolock.snapshot.json
+```
 
-```sh
+Write a readable verification report:
+
+```bash
+repolock verify . --report .repolock/verify.md
+```
+
+Print full JSON findings:
+
+```bash
+repolock verify . --json
+```
+
+## Configuration
+
+Repolock looks for `repolock.config.json` or `.repolock.json` in the target
+repository. CLI flags override config values.
+
+```json
+{
+  "outputDir": ".repolock",
+  "protectedPaths": [
+    ".github/workflows/",
+    "package.json",
+    "scripts/validate.sh",
+    "SECURITY.md",
+    "AGENTS.md"
+  ],
+  "requiredDocs": [
+    "README.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "LICENSE",
+    ".github/pull_request_template.md"
+  ],
+  "ignoreCoverage": [
+    "node_modules/",
+    "dist/",
+    ".env",
+    ".tmp/"
+  ]
+}
+```
+
+Equivalent CLI overrides can be repeated:
+
+```bash
+repolock snapshot . \
+  --protected-path package.json \
+  --required-doc SECURITY.md \
+  --ignore-coverage .env
+```
+
+## Local Checks
+
+```bash
+npm run check
+npm test
+npm run build
+npm run smoke
 bash scripts/validate.sh
 ```
 
-`scripts/validate.sh` runs the repository's standard local checks when they are defined and will also run `agent-qc ready` when `agent-qc` is installed. Missing `agent-qc` is treated as a skip, not a failure.
+## Source Attribution
 
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution expectations. Changes
-should be small, reviewable, and verified before review.
-
-## Security
-
-See [SECURITY.md](SECURITY.md) for vulnerability reporting guidance. Replace
-the default security policy before publishing the generated repository.
-
-These links assume this README has been copied to the generated repository root.
-
-## License
-
-MIT
+Inspired by common repo bootstrap checklists, OpenSSF Scorecard-style local
+checks, and the recurring need for agent-readable repo contracts. Reframed as a
+small deterministic local CLI rather than a hosted security scanner.
