@@ -1,0 +1,24 @@
+{
+  "outputDir": ".repolock",
+  "protectedPaths": [
+    ".github/workflows/",
+    "package.json",
+    "package-lock.json",
+    "scripts/validate.sh",
+    "SECURITY.md",
+    "AGENTS.md"
+  ],
+  "requiredDocs": [
+    "README.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "LICENSE",
+    ".github/pull_request_template.md"
+  ],
+  "ignoreCoverage": [
+    "node_modules/",
+    "dist/",
+    ".env",
+    ".tmp/"
+  ]
+}
