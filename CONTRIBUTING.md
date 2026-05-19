@@ -4,6 +4,28 @@ Thanks for helping improve `repolock`.
 
 This project values small, reviewable contributions with clear verification.
 
+## Development
+
+Install dependencies and run local checks before opening a change:
+
+```bash
+npm install
+npm run check
+npm test
+npm run build
+npm run smoke
+bash scripts/validate.sh
+```
+
+Keep code, fixtures, docs, and CI updates in separate commits when they
+represent different intentions.
+
+## CLI Fixtures
+
+Fixtures live in `fixtures/` and should stay small. Prefer adding a focused
+fixture over mutating an existing one when the behavior under test represents a
+new policy scenario.
+
 ## Issues
 
 Before opening an issue:
