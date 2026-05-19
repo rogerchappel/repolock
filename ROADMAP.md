@@ -1,5 +1,16 @@
 # Roadmap
 
+## Near Term
+
+- Publish a JSON schema for snapshot artifacts.
+- Add severity configuration for each verification finding.
+- Add optional commit history checks for Conventional Commit hygiene.
+
+## Later
+
+- Support richer policy presets for Python, Rust, Go, and mixed-language repos.
+- Add comparison output that explains exactly which keys changed.
+
 This roadmap describes intended direction, not a binding delivery promise.
 Review it regularly and update it as the project learns from users,
 contributors, and implementation constraints.
