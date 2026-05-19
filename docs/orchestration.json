@@ -1,0 +1,26 @@
+{
+  "name": "repolock",
+  "purpose": "Local-first repository policy snapshot and verify CLI",
+  "defaultBranch": "main",
+  "commands": {
+    "install": "npm install",
+    "check": "npm run check",
+    "test": "npm test",
+    "build": "npm run build",
+    "smoke": "npm run smoke",
+    "validate": "bash scripts/validate.sh"
+  },
+  "artifacts": [
+    ".repolock/repolock.snapshot.json",
+    ".repolock/repolock.report.md"
+  ],
+  "network": {
+    "runtime": false,
+    "telemetry": false
+  },
+  "agentSafety": {
+    "verifyBeforeHandoff": true,
+    "treatFailuresAsBlockers": true,
+    "snapshotMayExposeRepoShape": true
+  }
+}
