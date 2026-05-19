@@ -1,0 +1,9 @@
+{
+  "name": "drifted-repo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  },
+  "packageManager": "npm@10.0.0"
+}
