@@ -10,13 +10,13 @@ export async function verifySnapshot(repoRoot: string, expected: RepositoryPolic
 
   const findings: VerifyFinding[] = [];
 
-  compareScalar(findings, 'default-branch', 'Git default branch changed', expected.repository.defaultBranch, actual.repository.defaultBranch);
-  compareScalar(findings, 'lockfile-family', 'Package lockfile family changed', expected.packageManager.family, actual.packageManager.family);
-  compareArray(findings, 'lockfiles', 'Package lockfiles changed', expected.packageManager.lockfiles, actual.packageManager.lockfiles);
-  compareRecord(findings, 'package-scripts', 'Package scripts changed', expected.packageScripts, actual.packageScripts);
-  compareRecord(findings, 'required-docs', 'Required document presence changed', expected.requiredDocs, actual.requiredDocs);
-  compareRecord(findings, 'ignore-coverage', 'Ignore coverage changed', expected.ignoreRules.covers, actual.ignoreRules.covers);
-  compareArray(findings, 'protected-paths', 'Protected path policy changed', expected.protectedPaths, actual.protectedPaths);
+  compareScalar(findings, 'default-branch', 'Git default branch matches the snapshot', expected.repository.defaultBranch, actual.repository.defaultBranch);
+  compareScalar(findings, 'lockfile-family', 'Package lockfile family matches the snapshot', expected.packageManager.family, actual.packageManager.family);
+  compareArray(findings, 'lockfiles', 'Package lockfiles match the snapshot', expected.packageManager.lockfiles, actual.packageManager.lockfiles);
+  compareRecord(findings, 'package-scripts', 'Package scripts match the snapshot', expected.packageScripts, actual.packageScripts);
+  compareRecord(findings, 'required-docs', 'Required document presence matches the snapshot', expected.requiredDocs, actual.requiredDocs);
+  compareRecord(findings, 'ignore-coverage', 'Ignore coverage matches the snapshot', expected.ignoreRules.covers, actual.ignoreRules.covers);
+  compareArray(findings, 'protected-paths', 'Protected path policy matches the snapshot', expected.protectedPaths, actual.protectedPaths);
 
   if (expected.packageManager.family === 'multiple' || actual.packageManager.family === 'multiple') {
     findings.push({
