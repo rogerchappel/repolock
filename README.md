@@ -117,3 +117,9 @@ bash scripts/validate.sh
 Inspired by common repo bootstrap checklists, OpenSSF Scorecard-style local
 checks, and the recurring need for agent-readable repo contracts. Reframed as a
 small deterministic local CLI rather than a hosted security scanner.
+
+
+## Release readiness
+
+Use [docs/release-readiness.md](docs/release-readiness.md) before opening release PRs or tagging a release.
+
