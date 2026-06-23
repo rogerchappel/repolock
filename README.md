@@ -123,3 +123,8 @@ small deterministic local CLI rather than a hosted security scanner.
 
 Use [docs/release-readiness.md](docs/release-readiness.md) before opening release PRs or tagging a release.
 
+## Package contents
+
+Run `npm run package:smoke` before release. The tarball should include the
+compiled CLI, examples, fixture repos, docs, and validation scripts referenced
+by this README.

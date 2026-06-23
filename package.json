@@ -21,6 +21,9 @@
   "files": [
     "dist",
     "examples",
+    "docs",
+    "fixtures",
+    "scripts",
     "README.md",
     "LICENSE",
     "SECURITY.md",
