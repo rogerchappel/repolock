@@ -35,8 +35,9 @@
     "check": "tsc --noEmit",
     "test": "node --import tsx --test tests/*.test.ts",
     "smoke": "npm run build && node dist/cli.js snapshot fixtures/basic-repo --output .tmp/smoke && node dist/cli.js verify fixtures/basic-repo --snapshot .tmp/smoke/repolock.snapshot.json",
+    "example:smoke": "bash scripts/check-snapshot-example.sh",
     "package:smoke": "npm pack --dry-run",
-    "release:check": "npm run check && npm test && npm run build && npm run smoke && npm run package:smoke"
+    "release:check": "npm run check && npm test && npm run build && npm run smoke && npm run example:smoke && npm run package:smoke"
   },
   "keywords": [
     "repository",
