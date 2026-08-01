@@ -102,6 +102,12 @@ repolock snapshot . \
   --ignore-coverage .env
 ```
 
+Ignore coverage follows the relevant `.gitignore` matching rules for exact
+file and directory names, root-anchored patterns, `*`, `**`, and `?` wildcards,
+and ordered negations. Coverage checks whether the configured path itself is
+ignored; they do not infer coverage from arbitrary text prefixes or inspect
+descendant files to prove broader directory contents are ignored.
+
 ## Local Checks
 
 ```bash
