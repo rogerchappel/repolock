@@ -16,4 +16,17 @@ describe('createSnapshot', () => {
     assert.equal(snapshot.ignoreRules.covers['.env'], true);
     assert.ok(snapshot.protectedPaths.includes('package.json'));
   });
+
+  it('records exact file and directory ignore coverage', async () => {
+    const snapshot = await createSnapshot('fixtures/basic-repo', {
+      ignoreCoverage: ['node_modules/', 'node', 'dist/', 'dist']
+    });
+
+    assert.deepEqual(snapshot.ignoreRules.covers, {
+      'node_modules/': true,
+      node: false,
+      'dist/': true,
+      dist: false
+    });
+  });
 });
