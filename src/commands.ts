@@ -22,7 +22,9 @@ export async function runSnapshotCommand(repo: string, options: SnapshotCommandO
   const repoRoot = path.resolve(repo);
   const config = await readConfig(repoRoot, options.config);
   const snapshot = await createSnapshot(repoRoot, mergeSnapshotOptions(config, options));
-  const outputDir = path.resolve(options.output ?? config.outputDir ?? path.join(repoRoot, '.repolock'));
+  const outputDir = options.output
+    ? path.resolve(options.output)
+    : path.resolve(repoRoot, config.outputDir ?? '.repolock');
 
   await mkdir(outputDir, { recursive: true });
   await writeFile(path.join(outputDir, 'repolock.snapshot.json'), `${JSON.stringify(snapshot, null, 2)}\n`);

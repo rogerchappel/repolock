@@ -67,6 +67,17 @@ repolock verify . --json
 Repolock looks for `repolock.config.json` or `.repolock.json` in the target
 repository. CLI flags override config values.
 
+### Path resolution
+
+- The repository argument is resolved from the caller's current working directory.
+- A relative `outputDir` in repository configuration is resolved from the target
+  repository root. An absolute `outputDir` is used unchanged.
+- CLI path options (`--config`, `--output`, `--snapshot`, and `--report`) are
+  resolved from the caller's current working directory. Absolute paths are used
+  unchanged.
+- `snapshot --output` takes precedence over the configured `outputDir`, including
+  when the CLI value is relative.
+
 ```json
 {
   "outputDir": ".repolock",
