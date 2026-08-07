@@ -51,6 +51,20 @@ describe('getDefaultBranch', () => {
     assert.equal(await getDefaultBranch(repoRoot), 'main');
   });
 
+  it('falls back to master when no main ref exists', async () => {
+    const repoRoot = createRepository('master');
+    git(repoRoot, 'switch', '-c', 'feature');
+
+    assert.equal(await getDefaultBranch(repoRoot), 'master');
+  });
+
+  it('recognizes an origin main ref without origin/HEAD', async () => {
+    const repoRoot = createRepository('feature');
+    git(repoRoot, 'update-ref', 'refs/remotes/origin/main', 'HEAD');
+
+    assert.equal(await getDefaultBranch(repoRoot), 'main');
+  });
+
   it('returns null when no conventional default branch candidate exists', async () => {
     const repoRoot = createRepository('feature');
 
