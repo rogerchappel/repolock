@@ -33,6 +33,16 @@ node dist/cli.js --help
 repolock snapshot .
 ```
 
+### Git branch detection
+
+The snapshot records the default branch separately from the currently checked-out
+branch. Repolock first reads `origin/HEAD`. When that symbolic ref is unavailable
+(for example, in an offline or locally created repository), it checks for `main`
+and then `master`, considering both local branches and existing `origin` refs. It
+does not assume that the current branch is the default. If none of those refs can
+identify a default branch, including outside a Git repository, the snapshot
+records the default branch as `null` (`unknown` in the readable report).
+
 By default this writes:
 
 - `.repolock/repolock.snapshot.json`
