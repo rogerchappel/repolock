@@ -25,6 +25,18 @@ export async function getDefaultBranch(repoRoot: string): Promise<string | null>
     return symbolic.replace(/^origin\//, '');
   }
 
-  const current = await getCurrentBranch(repoRoot);
-  return current ?? null;
+  const fallbackCandidates = [
+    { name: 'main', refs: ['refs/heads/main', 'refs/remotes/origin/main'] },
+    { name: 'master', refs: ['refs/heads/master', 'refs/remotes/origin/master'] }
+  ];
+
+  for (const candidate of fallbackCandidates) {
+    for (const ref of candidate.refs) {
+      if (await git(repoRoot, ['rev-parse', '--verify', '--quiet', ref])) {
+        return candidate.name;
+      }
+    }
+  }
+
+  return null;
 }
