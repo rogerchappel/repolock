@@ -13,6 +13,12 @@ format and uses semantic versioning when versioned releases are published.
 
 ## [Unreleased]
 
+### Changed
+
+- Refreshed the `tsx` development dependency lock to resolve
+  [GHSA-g7r4-m6w7-qqqr](https://github.com/advisories/GHSA-g7r4-m6w7-qqqr)
+  in its transitive `esbuild` dependency.
+
 ### Added
 
 - Added a release-readiness checklist for local verification and package review.
