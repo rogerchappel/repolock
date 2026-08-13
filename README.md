@@ -152,6 +152,8 @@ Use [docs/release-readiness.md](docs/release-readiness.md) before opening releas
 
 ## Package contents
 
-Run `npm run package:smoke` before release. The tarball should include the
-compiled CLI, examples, fixture repos, docs, and validation scripts referenced
-by this README.
+Run `npm run package:smoke` before release. The command builds the package,
+checks every declared `main`, `bin`, and `exports` entrypoint against the packed
+tarball, installs that tarball in a temporary consumer project, imports the
+package root, and executes the packed `repolock --help` CLI. It fails before
+release if the published artifact cannot be consumed.
