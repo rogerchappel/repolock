@@ -20,12 +20,12 @@ program
   .addOption(listOption('--required-doc <path>', 'Required document to check. Can be repeated.'))
   .addOption(listOption('--ignore-coverage <pattern>', 'Ignore pattern coverage to check. Can be repeated.'))
   .action(async (repo: string, options: Record<string, unknown>) => {
-    const snapshot = await runSnapshotCommand(repo, normalizeOptions(options));
+    const result = await runSnapshotCommand(repo, normalizeOptions(options));
     console.log(JSON.stringify({
       ok: true,
-      snapshot: 'repolock.snapshot.json',
-      report: 'repolock.report.md',
-      warnings: snapshot.warnings
+      snapshot: result.snapshotPath,
+      report: result.reportPath,
+      warnings: result.snapshot.warnings
     }, null, 2));
   });
 
