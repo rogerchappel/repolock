@@ -48,6 +48,11 @@ By default this writes:
 - `.repolock/repolock.snapshot.json`
 - `.repolock/repolock.report.md`
 
+The command prints a JSON result whose `snapshot` and `report` fields contain
+the absolute paths actually written. This applies to the default directory,
+configured `outputDir`, and `--output`, so callers can consume the artifacts
+without reconstructing their locations.
+
 Use another output directory when you do not want artifacts in the target repo:
 
 ```bash
