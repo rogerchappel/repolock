@@ -62,8 +62,11 @@ repolock snapshot fixtures/basic-repo --output .tmp/basic-policy
 ## Verify
 
 ```bash
-repolock verify . --snapshot .repolock/repolock.snapshot.json
+repolock verify .
 ```
+
+Without `--snapshot`, verification reads `repolock.snapshot.json` from the same
+default or configured `outputDir` used by `snapshot`.
 
 Write a readable verification report:
 
@@ -86,11 +89,15 @@ repository. CLI flags override config values.
 
 - The repository argument is resolved from the caller's current working directory.
 - A relative `outputDir` in repository configuration is resolved from the target
-  repository root. An absolute `outputDir` is used unchanged.
+  repository root. An absolute `outputDir` is used unchanged. Both `snapshot`
+  output and the default `verify` input follow this rule, including with
+  `--config`.
 - CLI path options (`--config`, `--output`, `--snapshot`, and `--report`) are
   resolved from the caller's current working directory. Absolute paths are used
   unchanged.
 - `snapshot --output` takes precedence over the configured `outputDir`, including
+  when the CLI value is relative.
+- `verify --snapshot` takes precedence over the configured `outputDir`, including
   when the CLI value is relative.
 
 ```json
