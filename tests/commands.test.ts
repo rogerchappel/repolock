@@ -62,6 +62,46 @@ describe('snapshot command output paths', () => {
   });
 });
 
+describe('verify command snapshot paths', () => {
+  it('reads the default .repolock snapshot from the target repository', async () => {
+    const { repoRoot, unrelatedCwd } = await createTestRepository();
+    await runSnapshot(repoRoot, unrelatedCwd);
+
+    assert.equal((await runVerify(repoRoot, unrelatedCwd)).ok, true);
+  });
+
+  it('reads a relative configured outputDir from the target repository', async () => {
+    const { repoRoot, unrelatedCwd } = await createTestRepository('.policy-out');
+    await runSnapshot(repoRoot, unrelatedCwd);
+
+    assert.equal((await runVerify(repoRoot, unrelatedCwd)).ok, true);
+  });
+
+  it('reads an absolute configured outputDir unchanged', async () => {
+    const absoluteOutput = await mkdtemp(path.join(tmpdir(), 'repolock-verify-absolute-'));
+    const { repoRoot, unrelatedCwd } = await createTestRepository(absoluteOutput);
+    await runSnapshot(repoRoot, unrelatedCwd);
+
+    assert.equal((await runVerify(repoRoot, unrelatedCwd)).ok, true);
+  });
+
+  it('uses an explicit config while rooting its relative outputDir at the target repository', async () => {
+    const { repoRoot, unrelatedCwd } = await createTestRepository();
+    const configPath = path.join(unrelatedCwd, 'custom-config.json');
+    await writeFile(configPath, `${JSON.stringify({ outputDir: '.configured-policy' })}\n`);
+    await runSnapshot(repoRoot, unrelatedCwd, ['--config', configPath]);
+
+    assert.equal((await runVerify(repoRoot, unrelatedCwd, ['--config', configPath])).ok, true);
+  });
+
+  it('gives an explicit --snapshot precedence and resolves it from the caller cwd', async () => {
+    const { repoRoot, unrelatedCwd } = await createTestRepository('.missing-configured-policy');
+    await runSnapshot(repoRoot, unrelatedCwd, ['--output', '.explicit-policy']);
+
+    assert.equal((await runVerify(repoRoot, unrelatedCwd, ['--snapshot', '.explicit-policy/repolock.snapshot.json'])).ok, true);
+  });
+});
+
 async function createTestRepository(outputDir?: string): Promise<{ repoRoot: string; unrelatedCwd: string }> {
   const root = await mkdtemp(path.join(tmpdir(), 'repolock-command-'));
   const repoRoot = path.join(root, 'repository');
@@ -76,6 +116,13 @@ async function createTestRepository(outputDir?: string): Promise<{ repoRoot: str
 
 async function runSnapshot(repoRoot: string, cwd: string, extraArgs: string[] = []): Promise<Record<string, unknown>> {
   const { stdout } = await execFileAsync(process.execPath, ['--import', tsxLoaderPath, cliPath, 'snapshot', repoRoot, ...extraArgs], {
+    cwd
+  });
+  return JSON.parse(stdout) as Record<string, unknown>;
+}
+
+async function runVerify(repoRoot: string, cwd: string, extraArgs: string[] = []): Promise<Record<string, unknown>> {
+  const { stdout } = await execFileAsync(process.execPath, ['--import', tsxLoaderPath, cliPath, 'verify', repoRoot, ...extraArgs], {
     cwd
   });
   return JSON.parse(stdout) as Record<string, unknown>;
