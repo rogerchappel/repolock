@@ -45,7 +45,9 @@ export async function runSnapshotCommand(repo: string, options: SnapshotCommandO
 export async function runVerifyCommand(repo: string, options: VerifyCommandOptions): Promise<VerifyResult> {
   const repoRoot = path.resolve(repo);
   const config = await readConfig(repoRoot, options.config);
-  const snapshotPath = path.resolve(options.snapshot ?? path.join(repoRoot, '.repolock', 'repolock.snapshot.json'));
+  const snapshotPath = options.snapshot
+    ? path.resolve(options.snapshot)
+    : path.join(path.resolve(repoRoot, config.outputDir ?? '.repolock'), 'repolock.snapshot.json');
   const expected = JSON.parse(await readFile(snapshotPath, 'utf8')) as RepositoryPolicySnapshot;
   const result = await verifySnapshot(repoRoot, {
     ...expected,
