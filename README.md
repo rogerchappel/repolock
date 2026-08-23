@@ -85,6 +85,11 @@ repolock verify . --json
 Repolock looks for `repolock.config.json` or `.repolock.json` in the target
 repository. CLI flags override config values.
 
+Default configuration discovery is optional: if neither default file exists,
+Repolock continues with its built-in defaults. In contrast, an explicitly
+supplied `--config` path is required to exist; a missing file stops both
+`snapshot` and `verify` with an error that identifies the requested path.
+
 ### Path resolution
 
 - The repository argument is resolved from the caller's current working directory.
