@@ -13,6 +13,13 @@ const cliPath = path.join(projectRoot, 'src', 'cli.ts');
 const tsxLoaderPath = path.join(projectRoot, 'node_modules', 'tsx', 'dist', 'loader.mjs');
 
 describe('snapshot command output paths', () => {
+  it('rejects a missing explicitly requested config', async () => {
+    const { repoRoot, unrelatedCwd } = await createTestRepository();
+    const configPath = path.join(unrelatedCwd, 'missing-config.json');
+
+    await assertCommandRejectsMissingConfig('snapshot', repoRoot, unrelatedCwd, configPath);
+  });
+
   it('reports default output paths resolved from the target repository', async () => {
     const { repoRoot, unrelatedCwd } = await createTestRepository();
 
@@ -63,6 +70,13 @@ describe('snapshot command output paths', () => {
 });
 
 describe('verify command snapshot paths', () => {
+  it('rejects a missing explicitly requested config', async () => {
+    const { repoRoot, unrelatedCwd } = await createTestRepository();
+    const configPath = path.join(unrelatedCwd, 'missing-config.json');
+
+    await assertCommandRejectsMissingConfig('verify', repoRoot, unrelatedCwd, configPath);
+  });
+
   it('reads the default .repolock snapshot from the target repository', async () => {
     const { repoRoot, unrelatedCwd } = await createTestRepository();
     await runSnapshot(repoRoot, unrelatedCwd);
@@ -136,4 +150,26 @@ async function assertSnapshotFiles(outputDir: string): Promise<void> {
 function assertOutputPaths(output: Record<string, unknown>, outputDir: string): void {
   assert.equal(output.snapshot, path.join(outputDir, 'repolock.snapshot.json'));
   assert.equal(output.report, path.join(outputDir, 'repolock.report.md'));
+}
+
+async function assertCommandRejectsMissingConfig(
+  command: 'snapshot' | 'verify',
+  repoRoot: string,
+  cwd: string,
+  configPath: string
+): Promise<void> {
+  await assert.rejects(
+    execFileAsync(process.execPath, ['--import', tsxLoaderPath, cliPath, command, repoRoot, '--config', configPath], { cwd }),
+    (error: unknown) => {
+      const result = error as { code?: number; stderr?: string };
+      assert.notEqual(result.code, 0);
+      assert.match(result.stderr ?? '', /Explicit config file does not exist/);
+      assert.match(result.stderr ?? '', new RegExp(escapeRegExp(configPath)));
+      return true;
+    }
+  );
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
