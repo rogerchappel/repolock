@@ -7,12 +7,18 @@ export type RepolockConfig = SnapshotOptions & {
 };
 
 export async function readConfig(repoRoot: string, configPath?: string): Promise<RepolockConfig> {
-  const candidates = configPath
-    ? [path.resolve(configPath)]
-    : [
-      path.join(repoRoot, 'repolock.config.json'),
-      path.join(repoRoot, '.repolock.json')
-    ];
+  if (configPath) {
+    const explicitPath = path.resolve(configPath);
+    if (!(await pathExists(explicitPath))) {
+      throw new Error(`Explicit config file does not exist: ${explicitPath}`);
+    }
+    return readJsonFile<RepolockConfig>(explicitPath);
+  }
+
+  const candidates = [
+    path.join(repoRoot, 'repolock.config.json'),
+    path.join(repoRoot, '.repolock.json')
+  ];
 
   for (const candidate of candidates) {
     if (await pathExists(candidate)) {
