@@ -53,6 +53,10 @@ the absolute paths actually written. This applies to the default directory,
 configured `outputDir`, and `--output`, so callers can consume the artifacts
 without reconstructing their locations.
 
+The snapshot treats the exact `package.json` `packageManager` field as policy,
+including whether the field is present. Verification fails with the
+`package-manager-field` finding when its value changes, is added, or is removed.
+
 Use another output directory when you do not want artifacts in the target repo:
 
 ```bash
@@ -67,6 +71,10 @@ repolock verify .
 
 Without `--snapshot`, verification reads `repolock.snapshot.json` from the same
 default or configured `outputDir` used by `snapshot`.
+
+Verification enforces the saved package-manager family, lockfiles, and exact
+`packageManager` field alongside scripts, required documents, ignore coverage,
+protected paths, and the default branch.
 
 Write a readable verification report:
 
