@@ -13,6 +13,13 @@ export async function verifySnapshot(repoRoot: string, expected: RepositoryPolic
   compareScalar(findings, 'default-branch', 'Git default branch matches the snapshot', expected.repository.defaultBranch, actual.repository.defaultBranch);
   compareScalar(findings, 'lockfile-family', 'Package lockfile family matches the snapshot', expected.packageManager.family, actual.packageManager.family);
   compareArray(findings, 'lockfiles', 'Package lockfiles match the snapshot', expected.packageManager.lockfiles, actual.packageManager.lockfiles);
+  compareScalar(
+    findings,
+    'package-manager-field',
+    'package.json packageManager field matches the snapshot',
+    expected.packageManager.packageManagerField,
+    actual.packageManager.packageManagerField
+  );
   compareRecord(findings, 'package-scripts', 'Package scripts match the snapshot', expected.packageScripts, actual.packageScripts);
   compareRecord(findings, 'required-docs', 'Required document presence matches the snapshot', expected.requiredDocs, actual.requiredDocs);
   compareRecord(findings, 'ignore-coverage', 'Ignore coverage matches the snapshot', expected.ignoreRules.covers, actual.ignoreRules.covers);
