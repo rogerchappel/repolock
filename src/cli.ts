@@ -2,13 +2,14 @@
 import { Command, Option } from 'commander';
 import { runSnapshotCommand, runVerifyCommand } from './commands.js';
 import type { SnapshotOptions } from './schema.js';
+import { packageVersion } from './version.js';
 
 const program = new Command();
 
 program
   .name('repolock')
   .description('Local-first repository policy snapshot and verify CLI.')
-  .version('0.1.0');
+  .version(packageVersion);
 
 program
   .command('snapshot')
