@@ -19,11 +19,15 @@ format and uses semantic versioning when versioned releases are published.
   [GHSA-g7r4-m6w7-qqqr](https://github.com/advisories/GHSA-g7r4-m6w7-qqqr)
   in its transitive `esbuild` dependency.
 
+### Fixed
+
+- CLI `--version` and snapshot `tool.version` now read the package version
+  from `package.json` instead of a hardcoded value, so released packages,
+  CLI output, and snapshot metadata can no longer drift apart.
+
 ### Added
 
 - Added a release-readiness checklist for local verification and package review.
-
-- Initial project setup.
 
 ## Release Links
 
