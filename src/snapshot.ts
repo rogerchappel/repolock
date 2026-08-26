@@ -4,8 +4,7 @@ import { getCurrentBranch, getDefaultBranch } from './git.js';
 import { defaultIgnoreCoverage, readIgnorePolicy } from './ignore-policy.js';
 import { readPackagePolicy } from './package-policy.js';
 import { snapshotSchemaVersion, type RepositoryPolicySnapshot, type SnapshotOptions } from './schema.js';
-
-const packageVersion = '0.1.0';
+import { packageVersion } from './version.js';
 
 export async function createSnapshot(repoRoot: string, options: SnapshotOptions = {}): Promise<RepositoryPolicySnapshot> {
   const resolvedRoot = path.resolve(repoRoot);
