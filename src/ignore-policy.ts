@@ -53,7 +53,7 @@ function matchesPattern(pattern: string, target: string, isDirectory: boolean): 
   const directoryOnly = pattern.endsWith('/');
   const normalizedPattern = normalize(pattern).replace(/\/$/, '');
 
-  if (directoryOnly !== isDirectory) {
+  if (directoryOnly && !isDirectory) {
     return false;
   }
 

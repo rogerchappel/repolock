@@ -150,9 +150,11 @@ repolock snapshot . \
 
 Ignore coverage follows the relevant `.gitignore` matching rules for exact
 file and directory names, root-anchored patterns, `*`, `**`, and `?` wildcards,
-and ordered negations. Coverage checks whether the configured path itself is
-ignored; they do not infer coverage from arbitrary text prefixes or inspect
-descendant files to prove broader directory contents are ignored.
+and ordered negations. A slashless pattern such as `dist` matches that file or
+directory name at any level, while a trailing slash restricts the pattern to
+directories. Coverage checks whether the configured path itself is ignored;
+it does not infer coverage from arbitrary text prefixes or inspect descendant
+files to prove broader directory contents are ignored.
 
 ## Local Checks
 

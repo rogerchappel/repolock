@@ -12,12 +12,26 @@ async function coverage(entries: string, expected: string[]): Promise<Record<str
 }
 
 test('literal prefixes do not cover different directory names', async () => {
-  assert.deepEqual(await coverage('node\ndist\n', ['node_modules/', 'dist/']), {
+  assert.deepEqual(await coverage('node\ndist-other\n', ['node_modules/', 'dist/']), {
     'node_modules/': false,
     'dist/': false
   });
   assert.deepEqual(await coverage('node_modules/\n', ['node_modules/']), {
     'node_modules/': true
+  });
+});
+
+test('slashless patterns cover matching directories at any level', async () => {
+  assert.deepEqual(await coverage('dist\n.tmp\n', [
+    'dist/',
+    'packages/dist/',
+    '.tmp/',
+    'packages/.tmp/'
+  ]), {
+    'dist/': true,
+    'packages/dist/': true,
+    '.tmp/': true,
+    'packages/.tmp/': true
   });
 });
 
