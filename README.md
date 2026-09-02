@@ -97,6 +97,17 @@ Default configuration discovery is optional: if neither default file exists,
 Repolock continues with its built-in defaults. In contrast, an explicitly
 supplied `--config` path is required to exist; a missing file stops both
 `snapshot` and `verify` with an error that identifies the requested path.
+Configuration files must contain a JSON object. `outputDir` must be a string;
+`protectedPaths`, `requiredDocs`, and `ignoreCoverage` must each be arrays of
+strings when present. Invalid discovered and explicit configuration fails with
+the file path and field name instead of coercing values (for example, a
+`requiredDocs` string is never treated as a list of characters).
+
+Saved snapshots are validated before verification. Repolock checks the nested
+object, scalar, record, and array shapes it consumes—including
+`packageManager.lockfiles`, `requiredDocs`, `ignoreRules`, and
+`protectedPaths`—and reports the snapshot path and invalid field when a saved
+file does not match the generated snapshot shape.
 
 ### Path resolution
 
