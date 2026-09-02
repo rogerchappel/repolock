@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { readJsonFile, pathExists } from './fs-utils.js';
 import type { SnapshotOptions } from './schema.js';
+import { validateConfig } from './validation.js';
 
 export type RepolockConfig = SnapshotOptions & {
   outputDir?: string;
@@ -12,7 +13,7 @@ export async function readConfig(repoRoot: string, configPath?: string): Promise
     if (!(await pathExists(explicitPath))) {
       throw new Error(`Explicit config file does not exist: ${explicitPath}`);
     }
-    return readJsonFile<RepolockConfig>(explicitPath);
+    return validateConfig(await readJsonFile<unknown>(explicitPath), explicitPath);
   }
 
   const candidates = [
@@ -22,7 +23,7 @@ export async function readConfig(repoRoot: string, configPath?: string): Promise
 
   for (const candidate of candidates) {
     if (await pathExists(candidate)) {
-      return readJsonFile<RepolockConfig>(candidate);
+      return validateConfig(await readJsonFile<unknown>(candidate), candidate);
     }
   }
 
