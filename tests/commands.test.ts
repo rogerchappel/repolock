@@ -114,6 +114,31 @@ describe('verify command snapshot paths', () => {
 
     assert.equal((await runVerify(repoRoot, unrelatedCwd, ['--snapshot', '.explicit-policy/repolock.snapshot.json'])).ok, true);
   });
+
+  it('rejects malformed snapshots with the file and invalid field', async () => {
+    const { repoRoot, unrelatedCwd } = await createTestRepository();
+    const snapshotPath = path.join(unrelatedCwd, 'bad-snapshot.json');
+    await writeFile(snapshotPath, JSON.stringify({
+      schemaVersion: 1,
+      tool: { name: 'repolock', version: '1.0.0' },
+      generatedAt: new Date().toISOString(),
+      repository: { rootName: 'repository', defaultBranch: null, currentBranch: null },
+      packageManager: { family: 'npm', lockfiles: 'package-lock.json', packageManagerField: null },
+      packageScripts: {}, requiredDocs: {}, ignoreRules: { gitignoreExists: true, entries: [], covers: {} },
+      protectedPaths: [], commitHygiene: { conventionalCommitTypes: [], hasPullRequestTemplate: false, hasContributingGuide: false, hasSecurityPolicy: false }, warnings: []
+    }));
+
+    await assert.rejects(
+      execFileAsync(process.execPath, ['--import', tsxLoaderPath, cliPath, 'verify', repoRoot, '--snapshot', snapshotPath], { cwd: unrelatedCwd }),
+      (error: unknown) => {
+        const result = error as { stderr?: string };
+        assert.match(result.stderr ?? '', new RegExp(escapeRegExp(snapshotPath)));
+        assert.match(result.stderr ?? '', /packageManager\.lockfiles must be an array of strings/);
+        assert.doesNotMatch(result.stderr ?? '', /is not iterable|TypeError/);
+        return true;
+      }
+    );
+  });
 });
 
 async function createTestRepository(outputDir?: string): Promise<{ repoRoot: string; unrelatedCwd: string }> {
