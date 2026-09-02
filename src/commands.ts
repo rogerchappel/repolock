@@ -5,6 +5,7 @@ import { renderSnapshotReport, renderVerifyReport } from './report.js';
 import type { RepositoryPolicySnapshot, SnapshotOptions, VerifyResult } from './schema.js';
 import { createSnapshot } from './snapshot.js';
 import { verifySnapshot } from './verify.js';
+import { validateSnapshot } from './validation.js';
 
 export type SnapshotCommandOptions = SnapshotOptions & {
   output?: string;
@@ -48,7 +49,7 @@ export async function runVerifyCommand(repo: string, options: VerifyCommandOptio
   const snapshotPath = options.snapshot
     ? path.resolve(options.snapshot)
     : path.join(path.resolve(repoRoot, config.outputDir ?? '.repolock'), 'repolock.snapshot.json');
-  const expected = JSON.parse(await readFile(snapshotPath, 'utf8')) as RepositoryPolicySnapshot;
+  const expected = validateSnapshot(JSON.parse(await readFile(snapshotPath, 'utf8')) as unknown, snapshotPath);
   const result = await verifySnapshot(repoRoot, {
     ...expected,
     protectedPaths: options.protectedPaths ?? config.protectedPaths ?? expected.protectedPaths,
