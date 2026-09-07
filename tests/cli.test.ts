@@ -22,7 +22,7 @@ describe('verify CLI snapshot contract', () => {
       await writeFile(snapshotPath, JSON.stringify({ ...snapshot, [field]: value }));
 
       await assert.rejects(
-        execFileAsync(process.execPath, ['dist/cli.js', 'verify', 'fixtures/basic-repo', '--snapshot', snapshotPath]),
+        execFileAsync(process.execPath, ['--import', 'tsx', 'src/cli.ts', 'verify', 'fixtures/basic-repo', '--snapshot', snapshotPath]),
         (error: NodeJS.ErrnoException & { stderr?: string }) => {
           assert.match(error.stderr ?? '', new RegExp(`${escapeRegExp(snapshotPath)}: .*${field.replace('tool', 'tool\\.name')}`));
           return true;
@@ -33,11 +33,11 @@ describe('verify CLI snapshot contract', () => {
 
   it('continues to verify a current generated snapshot', async () => {
     const directory = await mkdtemp(path.join(tmpdir(), 'repolock-cli-'));
-    await execFileAsync(process.execPath, ['dist/cli.js', 'snapshot', 'fixtures/basic-repo', '--output', directory]);
+    await execFileAsync(process.execPath, ['--import', 'tsx', 'src/cli.ts', 'snapshot', 'fixtures/basic-repo', '--output', directory]);
     const snapshotPath = path.join(directory, 'repolock.snapshot.json');
     assert.equal(JSON.parse(await readFile(snapshotPath, 'utf8')).schemaVersion, 1);
 
-    const { stdout } = await execFileAsync(process.execPath, ['dist/cli.js', 'verify', 'fixtures/basic-repo', '--snapshot', snapshotPath]);
+    const { stdout } = await execFileAsync(process.execPath, ['--import', 'tsx', 'src/cli.ts', 'verify', 'fixtures/basic-repo', '--snapshot', snapshotPath]);
     assert.equal(JSON.parse(stdout).ok, true);
   });
 });
