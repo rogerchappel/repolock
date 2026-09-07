@@ -59,3 +59,27 @@ test('supports anchored and wildcard coverage patterns', async () => {
     'cache-long/': false
   });
 });
+
+test('middle globstars consume zero or multiple directories', async () => {
+  assert.deepEqual(await coverage('foo/**/bar/\n', [
+    'foo/bar/',
+    'foo/one/two/bar/',
+    'foo/one/two/baz/'
+  ]), {
+    'foo/bar/': true,
+    'foo/one/two/bar/': true,
+    'foo/one/two/baz/': false
+  });
+});
+
+test('leading globstars match root and nested directories', async () => {
+  assert.deepEqual(await coverage('**/cache/\n', [
+    'cache/',
+    'one/two/cache/',
+    'one/two/caches/'
+  ]), {
+    'cache/': true,
+    'one/two/cache/': true,
+    'one/two/caches/': false
+  });
+});
