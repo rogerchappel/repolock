@@ -159,6 +159,11 @@ repolock snapshot . \
   --ignore-coverage .env
 ```
 
+Ignore coverage follows Git-style matching for anchored patterns, directory-only
+patterns, negations, `*`, `?`, and `**/`. A globstar followed by a slash can
+match zero or more directories, so `foo/**/bar/` covers both `foo/bar/` and
+deeper `bar` directories, while `**/cache/` covers root and nested caches.
+
 Ignore coverage follows the relevant `.gitignore` matching rules for exact
 file and directory names, root-anchored patterns, `*`, `**`, and `?` wildcards,
 and ordered negations. A slashless pattern such as `dist` matches that file or
