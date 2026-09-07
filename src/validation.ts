@@ -1,5 +1,6 @@
 import type { RepolockConfig } from './config.js';
 import type { RepositoryPolicySnapshot } from './schema.js';
+import { snapshotSchemaVersion } from './schema.js';
 
 type JsonObject = Record<string, unknown>;
 
@@ -15,10 +16,19 @@ export function validateConfig(value: unknown, filePath: string): RepolockConfig
 export function validateSnapshot(value: unknown, filePath: string): RepositoryPolicySnapshot {
   const snapshot = object(value, filePath, 'snapshot');
   number(snapshot.schemaVersion, filePath, 'schemaVersion');
+  if (snapshot.schemaVersion !== snapshotSchemaVersion) {
+    throw new Error(`${filePath}: unsupported schemaVersion ${JSON.stringify(snapshot.schemaVersion)} (expected ${snapshotSchemaVersion})`);
+  }
   const tool = object(snapshot.tool, filePath, 'tool');
   string(tool.name, filePath, 'tool.name');
+  if (tool.name !== 'repolock') {
+    throw new Error(`${filePath}: unexpected tool.name ${JSON.stringify(tool.name)} (expected "repolock")`);
+  }
   string(tool.version, filePath, 'tool.version');
   string(snapshot.generatedAt, filePath, 'generatedAt');
+  if (!Number.isFinite(Date.parse(snapshot.generatedAt))) {
+    throw new Error(`${filePath}: malformed generatedAt ${JSON.stringify(snapshot.generatedAt)} (expected an ISO 8601 timestamp)`);
+  }
 
   const repository = object(snapshot.repository, filePath, 'repository');
   string(repository.rootName, filePath, 'repository.rootName');
