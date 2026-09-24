@@ -117,3 +117,7 @@ bash scripts/validate.sh
 Inspired by common repo bootstrap checklists, OpenSSF Scorecard-style local
 checks, and the recurring need for agent-readable repo contracts. Reframed as a
 small deterministic local CLI rather than a hosted security scanner.
+
+
+<!-- Automated change by spark worker -->
+This change was automatically processed by oss-pipeline-worker-spark-a
